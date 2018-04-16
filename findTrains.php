@@ -3,6 +3,15 @@
 <?php
 require_once 'head.php';
 require_once 'db.php';
+
+if (isset($_REQUEST["findDestination"]) && $_REQUEST["findDestination"] == "yes") {
+    $sql = "SELECT * FROM `station` WHERE `station_id` <> ".$_REQUEST["startStation"];
+    $res = $conn->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        $a .= '<option value="<?=$row["station_id"]?>"><?=$row["station_name"]?></option>';
+    }
+    exit;
+}
 ?>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -18,12 +27,27 @@ require_once 'sidebar.php';
                 <div class="row">
                     <div class="form-group col-4">
                         <label for="exampleInputEmail1">Start Station</label>
-                        <select class="form-control" name="" id="">
-                            <option value=""></option>
+                        <select onchange="showEndStation()" class="form-control" name="startstation" id="startstation" required>
+                            <option value="">Select Station</option>
+                            <?php
+                            $sql = "SELECT * FROM `station`";
+                            $res = $conn->query($sql);
+                            while ($row = $res->fetch_assoc()) {
+                                ?>
+                                <option class="form-control" value="<?= $row["station_id"] ?>"><?= $row["station_name"] ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-4 form-group">
+                        <label for="exampleInputEmail1">End Station</label>
+                        <select class="form-control" name="endstation" id="endstation" required>
+                            <option id="destinationdisabled" value="" disabled>Select Start Station</option>
                         </select>
                     </div>
                 </div>
-                <input type="submit" class="btn btn-primary btn-block col-4" value="Search" />
+                <input type="submit" class="btn btn-primary btn-block col-4" value="Search"/>
             </form>
         </div>
     </div>
@@ -68,6 +92,14 @@ require_once 'sidebar.php';
 <script>
     function findTrains() {
         return false;
+    }
+
+    function showEndStation() {
+        var startStation = $('#startstation');
+        $.post('findTrains.php', {findDestination: "yes", startStation: startStation.val()})
+            .then(function (data) {
+                $('#endstation');
+            })
     }
 </script>
 </html>
