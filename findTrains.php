@@ -17,7 +17,9 @@ require_once 'sidebar.php';
                 <div class="row">
                     <div class="form-group col-4">
                         <label for="exampleInputEmail1">Start Station</label>
-                        <select name="" id=""></select>
+                        <select name="" id="">
+
+                        </select>
                         <input class="form-control" id="exampleInputEmail1" type="date" aria-describedby="emailHelp"
                                placeholder="Enter email" required>
                     </div>

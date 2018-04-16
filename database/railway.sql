@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 16, 2018 at 09:12 PM
+-- Generation Time: Apr 16, 2018 at 09:22 PM
 -- Server version: 5.7.21-0ubuntu0.17.10.1
 -- PHP Version: 7.1.15-0ubuntu0.17.10.1
 
@@ -175,16 +175,17 @@ CREATE TABLE `train` (
   `train_type` varchar(255) NOT NULL,
   `start_station_id` int(11) NOT NULL,
   `end_station_id` int(11) NOT NULL,
-  `route_id` int(11) NOT NULL
+  `route_id` int(11) NOT NULL,
+  `cost` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `train`
 --
 
-INSERT INTO `train` (`train_id`, `train_name`, `train_type`, `start_station_id`, `end_station_id`, `route_id`) VALUES
-(1, 'Shatabdi Express', 'Express', 1, 2, 1),
-(2, 'Mumbai express', 'Express', 2, 1, 1);
+INSERT INTO `train` (`train_id`, `train_name`, `train_type`, `start_station_id`, `end_station_id`, `route_id`, `cost`) VALUES
+(1, 'Shatabdi Express', 'Express', 1, 2, 1, ''),
+(2, 'Mumbai express', 'Express', 2, 1, 1, '');
 
 -- --------------------------------------------------------
 
