@@ -48,7 +48,7 @@ if (isset($_REQUEST["findTrains"]) && $_REQUEST["findTrains"] == "yes") {
                 <td><?= $row["train_type"] ?></td>
                 <td><?= getStationName($_REQUEST["startStation"], $conn) ?></td>
                 <td><?= getStationName($_REQUEST["endStation"], $conn) ?></td>
-                <td><button class="btn btn-success" onclick="location.href='bookTickets.php?userId=&trainId=<?=$row[""]?>&'">Book</button></td>
+                <td><button class="btn btn-success" onclick="location.href='bookTickets.php?userId=&trainId=<?=$row["train_id"]?>&'">Book</button></td>
             </tr>
             <?php
         }
