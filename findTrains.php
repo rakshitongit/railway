@@ -1,19 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
-require_once 'head.php';
 require_once 'db.php';
 
 if (isset($_REQUEST["findDestination"]) && $_REQUEST["findDestination"] == "yes") {
-    $sql = "SELECT * FROM `station` WHERE `station_id` <> ".$_REQUEST["startStation"];
+    $sql = "SELECT * FROM `station` WHERE `station_id` <> " . $_REQUEST["startStation"];
     $res = $conn->query($sql);
     while ($row = $res->fetch_assoc()) {
-        $a .= '<option value="<?=$row["station_id"]?>"><?=$row["station_name"]?></option>';
+        $a .= '<option value="' . $row["station_id"] . '">' . $row["station_name"] . '</option>';
     }
+    echo $a;
     exit;
 }
-?>
 
+function getStationName($id, $conn)
+{
+    $sql = "SELECT * FROM `station` WHERE `station_id` = " . $id;
+    $res = $conn->query($sql);
+    return $res->fetch_assoc()["station_name"];
+}
+
+if (isset($_REQUEST["findTrains"]) && $_REQUEST["findTrains"] == "yes") {
+    $sql = "SELECT * FROM `train` WHERE `start_station_id` = " . $_REQUEST["startStation"] . " AND `end_station_id` = " . $_REQUEST["endStation"];
+    $res = $conn->query($sql); ?>
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Train Name</th>
+            <th>Train Type</th>
+            <th>Start Station</th>
+            <th>End Station</th>
+            <th>Book</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th>Train Name</th>
+            <th>Train Type</th>
+            <th>Start Station</th>
+            <th>End Station</th>
+            <th>Book</th>
+        </tr>
+        </tfoot>
+        <tbody>
+        <?php
+        while ($row = $res->fetch_assoc()) { ?>
+            <tr>
+                <td><?= $row["train_name"] ?></td>
+                <td><?= $row["train_type"] ?></td>
+                <td><?= getStationName($_REQUEST["startStation"], $conn) ?></td>
+                <td><?= getStationName($_REQUEST["endStation"], $conn) ?></td>
+                <td><button class="btn btn-success" onclick="location.href='bookTickets.php?userId=&trainId=<?=$row[""]?>&'">Book</button></td>
+            </tr>
+            <?php
+        }
+        ?>
+        </tbody>
+    </table>
+    <?php
+    exit;
+}
+
+require_once 'head.php';
+?>
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
 <!-- Navigation-->
 <?php
@@ -27,14 +79,16 @@ require_once 'sidebar.php';
                 <div class="row">
                     <div class="form-group col-4">
                         <label for="exampleInputEmail1">Start Station</label>
-                        <select onchange="showEndStation()" class="form-control" name="startstation" id="startstation" required>
+                        <select onchange="showEndStation()" class="form-control" name="startstation" id="startstation"
+                                required>
                             <option value="">Select Station</option>
                             <?php
                             $sql = "SELECT * FROM `station`";
                             $res = $conn->query($sql);
                             while ($row = $res->fetch_assoc()) {
                                 ?>
-                                <option class="form-control" value="<?= $row["station_id"] ?>"><?= $row["station_name"] ?></option>
+                                <option class="form-control"
+                                        value="<?= $row["station_id"] ?>"><?= $row["station_name"] ?></option>
                                 <?php
                             }
                             ?>
@@ -49,6 +103,9 @@ require_once 'sidebar.php';
                 </div>
                 <input type="submit" class="btn btn-primary btn-block col-4" value="Search"/>
             </form>
+        </div>
+
+        <div class="card mb-3 hidden" id="trainList" style="padding: 20px">
         </div>
     </div>
     <!-- /.container-fluid-->
@@ -91,14 +148,28 @@ require_once 'sidebar.php';
 </body>
 <script>
     function findTrains() {
+        let startStation = $('#startstation');
+        let trainList = $('#trainList');
+        trainList.removeClass('hidden');
+        let endStation = $('#endstation');
+        $.post('findTrains.php', {
+            findTrains: "yes",
+            startStation: startStation.val(),
+            endStation: endStation.val()
+        }).then(function (data) {
+            console.log(data);
+            trainList.append(data);
+            $("#dataTable").DataTable()
+        });
         return false;
     }
 
     function showEndStation() {
-        var startStation = $('#startstation');
+        let startStation = $('#startstation');
         $.post('findTrains.php', {findDestination: "yes", startStation: startStation.val()})
             .then(function (data) {
-                $('#endstation');
+                console.log(data);
+                $('#endstation').append(data);
             })
     }
 </script>
