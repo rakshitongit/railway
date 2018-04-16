@@ -2,6 +2,7 @@
 <html lang="en">
 <?php
 require_once 'head.php';
+require_once 'db.php';
 ?>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -13,15 +14,13 @@ require_once 'sidebar.php';
     <div class="container-fluid">
         <!-- Example DataTables Card-->
         <div class="card mb-3" style="padding: 20px">
-            <form onsubmit="return findAvailableTickets()">
+            <form onsubmit="return findTrains()">
                 <div class="row">
                     <div class="form-group col-4">
                         <label for="exampleInputEmail1">Start Station</label>
-                        <select name="" id="">
-
+                        <select class="form-control" name="" id="">
+                            <option value=""></option>
                         </select>
-                        <input class="form-control" id="exampleInputEmail1" type="date" aria-describedby="emailHelp"
-                               placeholder="Enter email" required>
                     </div>
                 </div>
                 <input type="submit" class="btn btn-primary btn-block col-4" value="Search" />
@@ -67,7 +66,7 @@ require_once 'sidebar.php';
 </div>
 </body>
 <script>
-    function findAvailableTickets() {
+    function findTrains() {
         return false;
     }
 </script>
